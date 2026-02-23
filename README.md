@@ -1,4 +1,4 @@
-# 🏪 UMKM Lokal — Platform Digital UMKM Kota Tegal
+# <img src="public/favicon.svg" width="28" alt="UMKM Lokal"> UMKM Lokal — Platform Digital UMKM Kota Tegal
 
 <p align="center">
   <img src="https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 12">
