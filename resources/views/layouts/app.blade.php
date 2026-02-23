@@ -18,36 +18,9 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
-        <!-- Google Maps API -->
-        @if(config('services.google_maps.api_key'))
-        <script>
-            window.googleMapsApiKey = "{{ config('services.google_maps.api_key') }}";
-            window.googleMapsLoaded = false;
-            window.googleMapsCallbacks = [];
-            
-            function initGoogleMaps() {
-                window.googleMapsLoaded = true;
-                window.googleMapsCallbacks.forEach(cb => cb());
-                window.googleMapsCallbacks = [];
-            }
-            
-            function loadGoogleMaps(callback) {
-                if (window.googleMapsLoaded) {
-                    callback();
-                    return;
-                }
-                window.googleMapsCallbacks.push(callback);
-                if (!document.getElementById('google-maps-script')) {
-                    const script = document.createElement('script');
-                    script.id = 'google-maps-script';
-                    script.src = `https://maps.googleapis.com/maps/api/js?key=${window.googleMapsApiKey}&libraries=places&callback=initGoogleMaps`;
-                    script.async = true;
-                    script.defer = true;
-                    document.head.appendChild(script);
-                }
-            }
-        </script>
-        @endif
+        <!-- Leaflet (OpenStreetMap) -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         
         <!-- Additional Styles -->
         @stack('styles')

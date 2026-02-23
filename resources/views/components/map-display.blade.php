@@ -36,7 +36,7 @@
 
     <!-- Get Directions Button -->
     <a 
-        href="https://www.google.com/maps/dir/?api=1&destination={{ $lat }},{{ $lng }}"
+        href="https://www.openstreetmap.org/directions?from=&to={{ $lat }}%2C{{ $lng }}"
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center px-4 py-2 bg-craft-500 hover:bg-craft-600 text-white rounded-lg transition text-sm"
@@ -46,13 +46,6 @@
         </svg>
         Petunjuk Arah
     </a>
-
-    <!-- No API Key Fallback -->
-    @if(!config('services.google_maps.api_key'))
-    <div class="bg-craft-100 rounded-lg p-4 text-craft-600 text-sm">
-        <p>Peta tidak tersedia. <a href="https://www.google.com/maps/dir/?api=1&destination={{ $lat }},{{ $lng }}" target="_blank" class="text-craft-700 underline">Buka di Google Maps</a></p>
-    </div>
-    @endif
 </div>
 @endif
 
@@ -66,48 +59,33 @@ document.addEventListener('alpine:init', () => {
         mapReady: false,
 
         init() {
-            // Convert to numbers to ensure proper type
             lat = parseFloat(lat);
             lng = parseFloat(lng);
             
-            if (typeof loadGoogleMaps === 'function') {
-                loadGoogleMaps(() => this.initMap(lat, lng, title));
-            } else {
-                console.error('Google Maps loader not found');
-            }
+            this.$nextTick(() => {
+                this.initMap(lat, lng, title);
+            });
         },
 
         initMap(lat, lng, title) {
-            // Create a new div for the map to avoid conflicts with Alpine's x-show
-            const mapDiv = document.createElement('div');
-            mapDiv.style.width = '100%';
-            mapDiv.style.height = '100%';
-            this.$refs.mapContainer.appendChild(mapDiv);
+            const mapContainer = this.$refs.mapContainer;
 
-            this.map = new google.maps.Map(mapDiv, {
-                center: { lat: lat, lng: lng },
-                zoom: 15,
-                mapTypeControl: false,
-                streetViewControl: false,
-                zoomControl: true,
-                fullscreenControl: true,
-            });
+            this.map = L.map(mapContainer).setView([lat, lng], 15);
 
-            this.marker = new google.maps.Marker({
-                position: { lat: lat, lng: lng },
-                map: this.map,
-                title: title,
-            });
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19,
+            }).addTo(this.map);
 
-            const infoWindow = new google.maps.InfoWindow({
-                content: `<div class="p-2 font-medium">${title}</div>`
-            });
-
-            this.marker.addListener('click', () => {
-                infoWindow.open(this.map, this.marker);
-            });
+            this.marker = L.marker([lat, lng]).addTo(this.map);
+            this.marker.bindPopup(`<div class="font-medium p-1">${title}</div>`).openPopup();
 
             this.mapReady = true;
+
+            // Fix map rendering in hidden/dynamic containers
+            setTimeout(() => {
+                this.map.invalidateSize();
+            }, 200);
         }
     }));
 });

@@ -10,13 +10,35 @@
     class="space-y-3"
 >
     <!-- Search Box -->
-    <div>
+    <div class="relative">
         <input 
             type="text" 
             x-ref="searchInput"
+            x-model="searchQuery"
+            @keydown.enter.prevent="searchLocation()"
             placeholder="Cari alamat atau nama tempat..."
-            class="w-full rounded-lg border-craft-300 focus:border-craft-500 focus:ring-craft-500"
+            class="w-full rounded-lg border-craft-300 focus:border-craft-500 focus:ring-craft-500 pr-10"
         >
+        <button 
+            type="button"
+            @click="searchLocation()"
+            class="absolute right-2 top-1/2 -translate-y-1/2 text-craft-500 hover:text-craft-700 p-1"
+        >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+        </button>
+        <!-- Search Results Dropdown -->
+        <div x-show="searchResults.length > 0" x-cloak 
+            class="absolute z-[1000] w-full mt-1 bg-white border border-craft-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+            <template x-for="(result, index) in searchResults" :key="index">
+                <button type="button" 
+                    @click="selectSearchResult(result)"
+                    class="w-full text-left px-4 py-2 text-sm hover:bg-craft-50 border-b border-craft-100 last:border-b-0">
+                    <span x-text="result.display_name" class="line-clamp-2"></span>
+                </button>
+            </template>
+        </div>
     </div>
 
     <!-- Action Buttons -->
@@ -67,14 +89,6 @@
     <!-- Hidden inputs for form submission -->
     <input type="hidden" name="latitude" :value="latitude">
     <input type="hidden" name="longitude" :value="longitude">
-
-    <!-- No API Key Message -->
-    @if(!config('services.google_maps.api_key'))
-    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-700 text-sm">
-        <p class="font-medium">Google Maps tidak tersedia</p>
-        <p>API key belum dikonfigurasi. Hubungi administrator.</p>
-    </div>
-    @endif
 </div>
 
 @once
@@ -84,70 +98,56 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('mapPicker', (initialLat, initialLng) => ({
         map: null,
         marker: null,
-        autocomplete: null,
         latitude: initialLat,
         longitude: initialLng,
         mapReady: false,
+        searchQuery: '',
+        searchResults: [],
+        searchTimeout: null,
 
         init() {
-            if (typeof loadGoogleMaps === 'function') {
-                loadGoogleMaps(() => this.initMap());
-            }
+            this.$nextTick(() => {
+                this.initMap();
+            });
         },
 
         initMap() {
             const defaultLat = this.latitude || -6.8797;
             const defaultLng = this.longitude || 109.1256;
             
-            this.map = new google.maps.Map(this.$refs.mapContainer, {
-                center: { lat: defaultLat, lng: defaultLng },
-                zoom: this.latitude ? 15 : 12,
-                mapTypeControl: false,
-                streetViewControl: false,
-            });
+            this.map = L.map(this.$refs.mapContainer).setView([defaultLat, defaultLng], this.latitude ? 15 : 12);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19,
+            }).addTo(this.map);
 
             if (this.latitude && this.longitude) {
-                this.placeMarker({ lat: this.latitude, lng: this.longitude });
+                this.placeMarker([this.latitude, this.longitude]);
             }
 
-            this.map.addListener('click', (e) => {
-                this.placeMarker(e.latLng.toJSON());
-                this.updateCoordinates(e.latLng.lat(), e.latLng.lng());
-            });
-
-            // Initialize Places Autocomplete
-            this.autocomplete = new google.maps.places.Autocomplete(this.$refs.searchInput, {
-                componentRestrictions: { country: 'id' },
-                fields: ['geometry', 'name'],
-            });
-
-            this.autocomplete.addListener('place_changed', () => {
-                const place = this.autocomplete.getPlace();
-                if (place.geometry) {
-                    const location = place.geometry.location;
-                    this.map.setCenter(location);
-                    this.map.setZoom(17);
-                    this.placeMarker(location.toJSON());
-                    this.updateCoordinates(location.lat(), location.lng());
-                }
+            this.map.on('click', (e) => {
+                this.placeMarker([e.latlng.lat, e.latlng.lng]);
+                this.updateCoordinates(e.latlng.lat, e.latlng.lng);
             });
 
             this.mapReady = true;
+
+            // Fix map rendering in hidden/dynamic containers
+            setTimeout(() => {
+                this.map.invalidateSize();
+            }, 200);
         },
 
-        placeMarker(position) {
+        placeMarker(latlng) {
             if (this.marker) {
-                this.marker.setPosition(position);
+                this.marker.setLatLng(latlng);
             } else {
-                this.marker = new google.maps.Marker({
-                    position: position,
-                    map: this.map,
-                    draggable: true,
-                    animation: google.maps.Animation.DROP,
-                });
+                this.marker = L.marker(latlng, { draggable: true }).addTo(this.map);
 
-                this.marker.addListener('dragend', (e) => {
-                    this.updateCoordinates(e.latLng.lat(), e.latLng.lng());
+                this.marker.on('dragend', (e) => {
+                    const pos = e.target.getLatLng();
+                    this.updateCoordinates(pos.lat, pos.lng);
                 });
             }
         },
@@ -158,15 +158,39 @@ document.addEventListener('alpine:init', () => {
             this.$dispatch('location-selected', { latitude: lat, longitude: lng });
         },
 
+        async searchLocation() {
+            if (!this.searchQuery || this.searchQuery.trim().length < 3) return;
+
+            try {
+                const response = await fetch(
+                    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(this.searchQuery)}&countrycodes=id&limit=5`,
+                    { headers: { 'Accept-Language': 'id' } }
+                );
+                this.searchResults = await response.json();
+            } catch (error) {
+                console.error('Search failed:', error);
+                this.searchResults = [];
+            }
+        },
+
+        selectSearchResult(result) {
+            const lat = parseFloat(result.lat);
+            const lng = parseFloat(result.lon);
+            this.map.setView([lat, lng], 17);
+            this.placeMarker([lat, lng]);
+            this.updateCoordinates(lat, lng);
+            this.searchResults = [];
+            this.searchQuery = result.display_name;
+        },
+
         useMyLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
-                        this.map.setCenter({ lat, lng });
-                        this.map.setZoom(17);
-                        this.placeMarker({ lat, lng });
+                        this.map.setView([lat, lng], 17);
+                        this.placeMarker([lat, lng]);
                         this.updateCoordinates(lat, lng);
                     },
                     (error) => {

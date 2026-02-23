@@ -252,7 +252,7 @@
                     <div>
                         <label class="block text-sm font-medium text-craft-500 mb-2">Lokasi di Peta</label>
                         @if($selectedUmkm->latitude && $selectedUmkm->longitude)
-                            <a href="https://www.google.com/maps/dir/?api=1&destination={{ $selectedUmkm->latitude }},{{ $selectedUmkm->longitude }}" 
+                            <a href="https://www.openstreetmap.org/directions?from=&to={{ $selectedUmkm->latitude }}%2C{{ $selectedUmkm->longitude }}" 
                                target="_blank" 
                                class="inline-flex items-center px-4 py-2 bg-craft-500 hover:bg-craft-600 text-white text-sm font-medium rounded-lg transition">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
