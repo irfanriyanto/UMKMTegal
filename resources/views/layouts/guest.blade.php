@@ -39,7 +39,7 @@
                             <path d="M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z"/>
                         </svg>
                         <span class="text-3xl font-extrabold">
-                            <span class="text-craft-200">UMKM</span><span class="text-white">Pedia</span>
+                            <span class="text-craft-200">UMKM</span><span class="text-white">Tegal</span>
                         </span>
                     </a>
                 </div>
@@ -49,7 +49,7 @@
                 </div>
                 
                 <p class="mt-6 text-craft-200 text-sm">
-                    &copy; {{ date('Y') }} UMKMPedia. Mendukung UMKM Indonesia.
+                    &copy; {{ date('Y') }} UMKMTegal. Mendukung UMKM Kota Tegal.
                 </p>
             </div>
         </div>

@@ -9,7 +9,7 @@
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white rounded-xl shadow-md p-8">
                 <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-craft-800 mb-4">Dukung UMKMPedia</h1>
+                    <h1 class="text-3xl font-bold text-craft-800 mb-4">Dukung UMKMTegal</h1>
                     <p class="text-craft-600 max-w-2xl mx-auto">
                         Platform ini 100% gratis untuk UMKM Lokal. Dukungan Anda membantu kami menutupi biaya operasional, research dan pengembangan fitur baru.
                     </p>

@@ -151,7 +151,7 @@ new #[Layout('layouts.guest')] class extends Component
 
         Auth::login($user);
 
-        $this->dispatch('toast', type: 'success', message: 'Pendaftaran berhasil! Selamat datang di UMKMPedia.');
+        $this->dispatch('toast', type: 'success', message: 'Pendaftaran berhasil! Selamat datang di UMKMTegal.');
 
         $this->redirect(route('umkm.dashboard', absolute: false));
     }

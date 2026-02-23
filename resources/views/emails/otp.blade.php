@@ -6,7 +6,7 @@
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
     <div style="background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-        <h1 style="color: white; margin: 0; font-size: 28px;">UMKM<span style="font-weight: normal;">Pedia</span></h1>
+        <h1 style="color: white; margin: 0; font-size: 28px;">UMKM<span style="font-weight: normal;">Tegal</span></h1>
     </div>
     
     <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #ddd; border-top: none;">
@@ -14,7 +14,7 @@
         
         <p>Halo,</p>
         
-        <p>Berikut adalah kode OTP untuk verifikasi pendaftaran akun Anda di UMKMPedia:</p>
+        <p>Berikut adalah kode OTP untuk verifikasi pendaftaran akun Anda di UMKMTegal:</p>
         
         <div style="background: #8B4513; color: white; font-size: 32px; font-weight: bold; letter-spacing: 8px; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
             {{ $otpCode }}
@@ -32,7 +32,7 @@
         <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
         
         <p style="color: #999; font-size: 12px; text-align: center;">
-            &copy; {{ date('Y') }} UMKMPedia. Mendukung UMKM Indonesia.
+            &copy; {{ date('Y') }} UMKMTegal. Mendukung UMKM Kota Tegal.
         </p>
     </div>
 </body>

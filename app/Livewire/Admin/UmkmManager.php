@@ -90,7 +90,7 @@ class UmkmManager extends Component
         ]);
 
         // Generate email dummy berdasarkan phone (untuk user yang tidak punya email)
-        $dummyEmail = 'umkm_' . preg_replace('/[^0-9]/', '', $this->ownerPhone) . '@umkmpedia.local';
+        $dummyEmail = 'umkm_' . preg_replace('/[^0-9]/', '', $this->ownerPhone) . '@umkmtegal.local';
         
         // Cek apakah email dummy sudah ada
         $existingUser = User::where('email', $dummyEmail)->first();
