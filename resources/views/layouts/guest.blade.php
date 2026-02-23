@@ -49,7 +49,7 @@
                 </div>
                 
                 <p class="mt-6 text-craft-200 text-sm">
-                    &copy; {{ date('Y') }} UMKMTegal. Mendukung UMKM Kota Tegal.
+                    &copy; {{ date('Y') }} UMKMTegal. Mendukung UMKM Tegal.
                 </p>
             </div>
         </div>

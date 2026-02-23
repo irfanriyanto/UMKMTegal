@@ -32,7 +32,7 @@
         <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
         
         <p style="color: #999; font-size: 12px; text-align: center;">
-            &copy; {{ date('Y') }} UMKMTegal. Mendukung UMKM Kota Tegal.
+            &copy; {{ date('Y') }} UMKMTegal. Mendukung UMKM Tegal.
         </p>
     </div>
 </body>

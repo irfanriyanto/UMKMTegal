@@ -22,10 +22,10 @@
                     <span class="bg-gradient-to-r from-craft-100 via-craft-200 to-craft-100 bg-clip-text text-transparent">Temukan, Dukung, Majukan.</span>
                 </p>
                 <p class="text-lg md:text-xl text-craft-200 mb-4 max-w-3xl mx-auto leading-relaxed">
-                    Platform digital untuk menemukan dan mendukung produk-produk berkualitas dari Usaha Mikro, Kecil, dan Menengah di <span class="font-bold text-white">Kota Tegal</span>.
+                    Platform digital untuk menemukan dan mendukung produk-produk berkualitas dari Usaha Mikro, Kecil, dan Menengah di <span class="font-bold text-white">Tegal</span>.
                 </p>
                 <p class="text-base md:text-lg text-craft-300 mb-6 max-w-2xl mx-auto">
-                    Mendukung kemajuan UMKM Kota Tegal menuju pasar yang lebih luas.
+                    Mendukung kemajuan UMKM Tegal menuju pasar yang lebih luas.
                 </p>
                 <!-- Hashtag Branding -->
                 <div class="flex flex-wrap justify-center gap-3 mb-8">
@@ -50,7 +50,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-craft-800 mb-4">UMKM Pilihan Tegal</h2>
-                <p class="text-craft-600">Temukan usaha lokal terbaik dari Kota Tegal</p>
+                <p class="text-craft-600">Temukan usaha lokal terbaik dari Tegal</p>
             </div>
             <livewire:home.featured-umkm />
         </div>

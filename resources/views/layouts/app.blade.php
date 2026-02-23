@@ -99,7 +99,7 @@
                         </div>
                     </div>
                     <div class="border-t border-craft-700 mt-8 pt-8 text-center text-sm text-craft-400">
-                        <p>&copy; {{ date('Y') }} <span class="text-craft-200">UMKM</span><span class="text-white">Tegal</span>. Mendukung UMKM Kota Tegal.</p>
+                        <p>&copy; {{ date('Y') }} <span class="text-craft-200">UMKM</span><span class="text-white">Tegal</span>. Mendukung UMKM Tegal.</p>
                     </div>
                 </div>
             </footer>
